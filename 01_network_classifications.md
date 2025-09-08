@@ -1,7 +1,7 @@
 # Network Classifications
 
 ## Introduction
-This document provides an overview of network classifications based on geographical scope. Understanding these classifications is crucial for network planning and implementation, as each type serves different purposes and has distinct characteristics.
+Network classifications by geographical scope and their typical characteristics.
 
 ### Network Models
 - **Client-Server Model**: Centralized servers provide resources/services to multiple clients; common on the internet and in enterprises

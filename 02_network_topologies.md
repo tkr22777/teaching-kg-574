@@ -1,7 +1,7 @@
 # Network Topologies
 
 ## Introduction
-This document provides an overview of common computer network topologies. Each topology represents the layout or structure of a network, including its nodes and connecting lines. The choice of topology affects a network's cost, performance, and reliability.
+Overview of common network topologies and how layout impacts cost, performance, and reliability.
 
 This guide uses vector-based diagrams (Mermaid.js) to illustrate each topology, allowing for easy updates and modifications.
 
