@@ -42,7 +42,7 @@ graph LR
 
 ```mermaid
 graph LR
-  Seg1[Segment A] -- Bridge -- Seg2[Segment B]
+  Seg1[Segment A] --- BR[Bridge] --- Seg2[Segment B]
 ```
 
 ## Router
@@ -74,17 +74,4 @@ graph TD
   AP --- Switch
   Switch --- Router
   Router --- Internet
-```
-
----
-
-## Putting it together (simple view)
-
-```mermaid
-graph LR
-  ISP[Internet] --- GW[Wi‑Fi Router]
-  GW --- SW[Switch]
-  SW --- PC1[PC]
-  SW --- PC2[Printer]
-  GW ~~~ Phone[Phone]
 ```
