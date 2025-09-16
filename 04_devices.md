@@ -5,16 +5,20 @@
 - Wi‑Fi gear: Wi‑Fi router, WAP, RAP
 - Where each device sits in a simple home/office network and what it does
 
-
 ## NIC (Network Interface Card)
-- The network port of a device; has a hardware address (MAC) and sends/receives network traffic.
-- Tip: To always assign `192.168.10.50` to MAC `AA:BB:CC:DD:EE:FF`, use a router DHCP reservation or set a static IP.
+ - Lets a device join a network and reach the Internet.
+ - The device’s network port with a unique MAC identity that sends and receives traffic.
+ - Serves one device, whereas switches/routers connect many devices or networks.
+ - Available as wired Ethernet or Wi‑Fi; many devices (e.g., laptops) have both.
+ - To keep its IP from changing, pin the IP in your router settings or use a static IP.
 
 
 ## Hub vs Switch
 
 ### Hub (old/repeater)
-- Copies anything it hears to all ports. Simple, noisy, not used today.
+- Sends every message to all ports, so everyone shares bandwidth and can collide.
+- Exists from early networks for simplicity; replaced by switches that send only where needed.
+- Avoid in modern setups; use only for quick tests or legacy gear.
 
 ```mermaid
 graph TD
@@ -26,7 +30,12 @@ graph TD
 ```
 
 ### Switch (modern)
-- Learns which device is on which port and sends traffic only where needed.
+- Connects devices on the same network and sends traffic only where it needs to go.
+- Learns which device is on which port by watching traffic.
+- Stops collisions and shares bandwidth more fairly than a hub.
+- Works at the Ethernet level and doesn’t change IP addresses.
+- Can separate groups with VLANs on one physical switch.
+- In homes, the Ethernet ports on a Wi‑Fi router are a built‑in switch.
 
 ```mermaid
 graph LR
@@ -46,8 +55,11 @@ graph LR
 ```
 
 ## Router
-- Connects different networks (e.g., your home network to the Internet, or two office segments).
-- Chooses a path for traffic between networks; can enforce rules and share one public IP among many devices (home NAT).
+- Connects different networks (home LAN to the Internet, or LAN to LAN).
+- Chooses where to send traffic between networks.
+- Lets many devices share one public address using NAT.
+- Acts as the default gateway so devices can reach other networks.
+- Often provides a basic firewall and rules (e.g., port forwarding).
 
 ```mermaid
 graph LR
@@ -59,19 +71,26 @@ Common in homes: the “Wi‑Fi router” is a router + small switch + wireless 
 ## Wi‑Fi: Router, WAP, RAP
 
 ### Wi‑Fi Router
-- All‑in‑one box: routes to the Internet, provides a few Ethernet ports, and creates your Wi‑Fi network.
+- Routes your home network to the Internet and creates the Wi‑Fi network.
+- Includes a small Ethernet switch for your wired devices.
+- Secures Wi‑Fi with passwords and can offer a guest network.
+- Usually assigns IPs (DHCP) and provides a basic firewall.
+- Place centrally and elevated for better coverage; add a switch if you need more ports.
 
 ### WAP (Wireless Access Point)
-- Adds or extends Wi‑Fi coverage; bridges wireless devices onto your existing wired network.
+- Creates or extends Wi‑Fi coverage and bridges wireless devices onto your existing network.
+- Not a router; connects back to your router/switch over a wired link.
 
 ### RAP (Remote Access Point)
-- A WAP that connects back to a main site over the Internet for remote locations.
+- A WAP for remote sites that connects back over the Internet to your main network.
+- Useful for branch offices or home workers; traffic is tunneled back securely.
+- Typically managed by a controller or cloud from the main site.
 
-```mermaid
-graph TD
-  Phone ~~~ AP((WAP))
-  Laptop ~~~ AP
-  AP --- Switch
-  Switch --- Router
-  Router --- Internet
-```
+## Glossary (Quick Reference)
+- MAC address (Media Access Control address): Unique hardware address of a network interface on a local network.
+- IP address (Internet Protocol address): Network address software uses to identify a device across networks.
+- Ethernet: Wired networking technology used by switches/routers to connect devices in a LAN.
+- DHCP (Dynamic Host Configuration Protocol): Service that automatically assigns IP addresses and other settings to devices.
+- NAT (Network Address Translation): Technique on routers that lets many devices share one public IP address.
+- VLAN (Virtual LAN): Splits one physical switch into separate, isolated logical networks.
+- Firewall: Set of rules on a router that allow or block traffic for safety.
