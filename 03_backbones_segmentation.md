@@ -48,25 +48,32 @@ Could networks work without a backbone? Yes, but they'd be slower, more expensiv
 ```mermaid
 graph TD
   subgraph "Access Layer"
-    AS1[Access Switch]
-    AS2[WiFi Access Point]
+    AS1[Floor 1 Switch<br/>Employee PCs]
+    AS2[Floor 2 Switch<br/>Meeting Rooms]
+    AS3[WiFi Controllers<br/>Wireless APs]
+    AS4[Server Farm<br/>Web/DB Servers]
   end
   
   subgraph "Distribution Layer"
-    DS[Distribution Switch]
+    DS1[Building A<br/>Distribution Switch]
+    DS2[Datacenter<br/>Distribution Switch]
   end
   
   subgraph "Core Layer (Backbone)"
-    CS[Core Switch<br/>High Speed Links]
+    CS[Campus Core<br/>High Speed Links<br/>10G/40G]
   end
   
-  AS1 --> DS
-  AS2 --> DS
-  DS --> CS
+  AS1 --> DS1
+  AS2 --> DS1
+  AS3 --> DS1
+  AS4 --> DS2
+  
+  DS1 --> CS
+  DS2 --> CS
   CS --> WAN/Internet
 ```
 
-This diagram shows the three-layer hierarchy with traffic flowing upward to the backbone. Whether a user connects via the access switch or WiFi access point, all traffic must pass through the distribution layer to reach the core backbone, which provides the high-speed path to the Internet and other network segments.
+This diagram shows a realistic campus network with multiple distribution switches serving different areas. Building A's distribution switch aggregates employee floors and WiFi infrastructure, while the datacenter distribution switch handles server traffic. All inter-building and Internet traffic flows through the backbone, which provides the high-capacity interconnection between these different network areas.
 
 ## Segmentation: VLANs and Subnets
 
