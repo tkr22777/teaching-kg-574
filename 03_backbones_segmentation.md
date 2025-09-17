@@ -14,7 +14,7 @@
 - **VLAN**: A logical L2 (Ethernet) grouping; hosts “act” like they’re on the same switch even if not.
 - **Default Gateway**: The router/switch IP that devices send traffic to for other subnets.
 
-## Hierarchical Design
+## Hierarchical Design (Needs improvement and clarification)
 
 - **Access**: Where users/things plug in (edge switches, Wi‑Fi APs)
 - **Distribution**: Aggregates access, enforces simple policies, routes between segments
