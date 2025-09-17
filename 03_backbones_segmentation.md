@@ -11,8 +11,7 @@
 - **Backbone (Core)**: The fast, central part of a network that carries most traffic between areas. Think “highway.”
 - **Segment**: A smaller part of a network. Can be made by IP subnets or VLANs.
 - **Subnet**: An IP range (like 10.0.10.0/24) that groups hosts together.
-- **VLAN**: A logical L2 (Ethernet) grouping; hosts “act” like they’re on the same switch even if not.
-- **Default Gateway**: The router/switch IP that devices send traffic to for other subnets.
+- **VLAN**: A logical L2 (Ethernet) grouping; hosts “act” like they’re on the same switch (even if they are not)
 
 ## Hierarchical Design: Building Around the Backbone
 
@@ -25,6 +24,7 @@ Networks are built in layers, starting from where users connect and building up 
   - Provides basic connectivity and security
 - **Distribution Layer**: Aggregates access and manages traffic
 
+  - Uses **routers** to interconnect access layer switches
   - Collects traffic from multiple access switches
   - Routes between VLANs and enforces policies
   - Decides which traffic needs to go to the backbone
@@ -38,6 +38,7 @@ Networks are built in layers, starting from where users connect and building up 
 **Why "Backbone"?** Just like your body's backbone provides the main structural support and efficient pathway for nerve signals, a network backbone provides the main infrastructure for efficient data transport between network segments.
 
 **Why Do We Need a Backbone?**
+
 - **Scalability**: Without a backbone, connecting 10 network segments would require 45 individual links (each segment connected to every other). With a backbone, you only need 10 links (each segment connects once to the backbone).
 - **Performance**: Dedicated high-capacity links (10G+) handle inter-segment traffic efficiently, rather than overloading distribution switches with transit traffic.
 - **Cost Efficiency**: Fewer total links and centralized high-speed equipment is more economical than multiple point-to-point connections.
@@ -55,8 +56,8 @@ graph TD
   end
   
   subgraph "Distribution Layer"
-    DS1[Building A<br/>Distribution Switch]
-    DS2[Datacenter<br/>Distribution Switch]
+    DS1[Building A<br/>Router]
+    DS2[Datacenter<br/>Router]
   end
   
   subgraph "Core Layer (Backbone)"
@@ -73,7 +74,7 @@ graph TD
   CS --> WAN/Internet
 ```
 
-This diagram shows a realistic campus network with multiple distribution switches serving different areas. Building A's distribution switch aggregates employee floors and WiFi infrastructure, while the datacenter distribution switch handles server traffic. All inter-building and Internet traffic flows through the backbone, which provides the high-capacity interconnection between these different network areas.
+This diagram shows a realistic campus network with multiple routers at the distribution layer serving different areas. Building A's router aggregates employee floors and WiFi infrastructure while providing inter-VLAN routing, while the datacenter router handles server traffic and routes between server VLANs. All inter-building and Internet traffic flows through the backbone, which provides the high-capacity interconnection between these different network areas.
 
 ## Segmentation: VLANs and Subnets
 
@@ -104,7 +105,7 @@ graph TD
     G2[Visitor Phone<br/>10.0.40.25]
   end
   
-  Router[Layer 3 Switch<br/>Inter-VLAN Router<br/>10.0.20.1, 10.0.40.1]
+  Router[Router<br/>Inter-VLAN Routing<br/>10.0.20.1, 10.0.40.1]
   
   U1 --> Router
   U2 --> Router  
@@ -114,7 +115,7 @@ graph TD
   Router --> Internet[Internet<br/>Firewall Rules Apply]
 ```
 
-This diagram shows network segmentation in action with two isolated VLANs on the same physical infrastructure. Employee devices in VLAN 20 and guest devices in VLAN 40 cannot communicate directly with each other, but both segments can reach the Internet through the Layer 3 router which enforces security policies between the VLANs.
+This diagram shows network segmentation in action with two isolated VLANs on the same physical infrastructure. Employee devices in VLAN 20 and guest devices in VLAN 40 cannot communicate directly with each other, but both segments can reach the Internet through the router which enforces security policies between the VLANs.
 
 **Key Points:**
 

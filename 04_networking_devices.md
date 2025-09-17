@@ -29,6 +29,8 @@ graph TD
   A -- copied to everyone --> H
 ```
 
+In the above diagram, the hub acts as a simple repeater, broadcasting every frame to ALL connected ports. When PC A sends data, PCs B, C, and D all receive it unnecessarily. This creates a single collision domain where all devices compete for shared bandwidth, leading to inefficient utilization and potential collisions.
+
 ### Switch (modern)
 - Connects devices on the same network and sends traffic only where it needs to go.
 - Learns which device is on which port by watching traffic.
@@ -49,6 +51,19 @@ graph LR
   A -- directly to B --> S
 ```
 
+In the above diagram, the switch learns MAC addresses and intelligently forwards frames only to the intended recipient. When PC A communicates with PC B, the switch sends the frame directly to PC B's port, not to PC C. This creates separate collision domains per port and enables full-duplex communication with dedicated bandwidth.
+
+**Switch MAC Address Table Example:**
+
+| Port | MAC Address | Status | Age (seconds) |
+|------|-------------|---------|---------------|
+| 1 | AA:BB:CC:01:02:03 | Learned | 45 |
+| 2 | AA:BB:CC:01:02:04 | Learned | 12 |
+| 3 | AA:BB:CC:01:02:05 | Learned | 8 |
+| 4 | - | Empty | - |
+
+This table shows how the switch automatically builds and maintains its forwarding database. When a device sends a frame, the switch records the source MAC address and associates it with the incoming port. The "Age" column tracks how recently each MAC was seen - entries are removed after a timeout period (typically 5 minutes) to handle device moves or disconnections.
+
 ## Bridge
 - Like a small 2‑port switch: connects two network segments and forwards relavant traffic between them.
 - Helps reduce noise between areas and extend networks.
@@ -57,6 +72,8 @@ graph LR
 graph LR
   Seg1[Segment A] --- BR[Bridge] --- Seg2[Segment B]
 ```
+
+In the above diagram, the bridge selectively filters traffic between network segments, learning MAC addresses on each side. Local traffic within Segment A stays local and doesn't cross to Segment B, reducing congestion. Only inter-segment traffic gets forwarded, creating two separate collision domains while maintaining connectivity.
 
 ## Router
 - Connects different networks (home LAN to the Internet, or LAN to LAN).
@@ -69,6 +86,8 @@ graph LR
 graph LR
   LAN[Home/Office Network] --- R[Router] --- Net[Internet]
 ```
+
+In the above diagram, the router connects different networks, serving as a gateway between the private LAN (192.168.x.x addresses) and the public Internet. It performs NAT to allow multiple devices to share one public IP address and acts as the default gateway for all external traffic.
 
 Common in homes: the “Wi‑Fi router” is a router + small switch + wireless access point in one box.
 
@@ -116,6 +135,8 @@ graph TD
   style MS fill:#f3e5f5
   style WAP fill:#e8f5e8
 ```
+
+In the above diagram, this network shows how devices work together in a business environment. The Router/Firewall (orange) provides Internet access, security, and NAT. The Managed Switch (purple) distributes wired connections to PCs and servers. The Wireless Access Point (green) serves mobile devices via Wi-Fi (dotted lines). The Remote Site connects through a Bridge, extending the network geographically. The RAP provides centrally-managed wireless access at the remote location.
 
 ## Device Selection Guide
 
