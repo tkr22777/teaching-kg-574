@@ -70,7 +70,7 @@ This diagram shows the three-layer hierarchy with traffic flowing upward to the 
 
 ## Segmentation: VLANs and Subnets
 
-We split the network into logical groups to reduce broadcast traffic, improve security, and manage growth.
+Segmentation divides a large network into smaller, isolated logical groups while maintaining controlled connectivity between them. This fundamental network design principle solves several critical problems:
 
 ### Common Segmentation Strategies
 
