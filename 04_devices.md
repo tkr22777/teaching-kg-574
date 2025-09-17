@@ -1,6 +1,6 @@
 ## Network Devices in Practice
 
-### What we’ll cover
+### What we'll cover
 - NIC, Hub, Switch, Router, Bridge
 - Wi‑Fi gear: Wi‑Fi router, WAP, RAP
 - Where each device sits in a simple home/office network and what it does
@@ -33,9 +33,13 @@ graph TD
 - Connects devices on the same network and sends traffic only where it needs to go.
 - Learns which device is on which port by watching traffic.
 - Stops collisions and shares bandwidth more fairly than a hub.
-- Works at the Ethernet level and doesn’t change IP addresses.
+- Works at the Ethernet level and doesn't change IP addresses.
 - Can separate groups with VLANs on one physical switch.
 - In homes, the Ethernet ports on a Wi‑Fi router are a built‑in switch.
+
+**Unmanaged vs Managed Switches:**
+- **Unmanaged**: Plug-and-play, no configuration needed. Good for homes and simple setups.
+- **Managed**: Can be configured via web interface or command line. Offers VLANs, QoS, port mirroring, and monitoring. Essential for business networks.
 
 ```mermaid
 graph LR
@@ -46,7 +50,7 @@ graph LR
 ```
 
 ## Bridge
-- Like a small 2‑port switch: connects two network segments and forwards useful traffic between them.
+- Like a small 2‑port switch: connects two network segments and forwards relavant traffic between them.
 - Helps reduce noise between areas and extend networks.
 
 ```mermaid
@@ -86,7 +90,49 @@ Common in homes: the “Wi‑Fi router” is a router + small switch + wireless 
 - Useful for branch offices or home workers; traffic is tunneled back securely.
 - Typically managed by a controller or cloud from the main site.
 
-## Glossary (Quick Reference)
+### Complete Network Overview
+Here's how these devices work together in a typical small office network:
+
+```mermaid
+graph TD
+  Internet[Internet] --- R[Router/Firewall]
+  R --- MS[Managed Switch]
+  MS --- PC1[PC 1 with NIC]
+  MS --- PC2[PC 2 with NIC]
+  MS --- WAP[Wireless Access Point]
+  MS --- Server[File Server]
+  WAP -.-> Laptop[Laptop Wi-Fi]
+  WAP -.-> Phone[Mobile Device]
+  
+  subgraph "Remote Site"
+    RS[Remote Switch] --- RPC[Remote PC]
+    RS --- RAP[Remote Access Point]
+  end
+  
+  R --- Bridge[Bridge] --- RS
+  
+  style Internet fill:#e1f5fe
+  style R fill:#fff3e0
+  style MS fill:#f3e5f5
+  style WAP fill:#e8f5e8
+```
+
+## Device Selection Guide
+
+**When to use each device:**
+
+| Scenario | Best Device | Why? |
+|----------|-------------|------|
+| Connect single device to network | NIC | Every device needs one |
+| Connect 5-8 devices in home | Unmanaged Switch | Simple, cheap, reliable |
+| Connect 20+ devices in office | Managed Switch | VLANs, monitoring, control |
+| Connect home network to Internet | Wi-Fi Router | All-in-one solution |
+| Add Wi-Fi to existing network | WAP | Dedicated wireless performance |
+| Connect remote office | RAP + VPN | Secure tunnel back to main site |
+| Connect two building segments | Bridge | Reduces traffic between segments |
+| Connect different networks | Router | Routes between network boundaries |
+
+## Glossary / Quick Reference
 - MAC address (Media Access Control address): Unique hardware address of a network interface on a local network.
 - IP address (Internet Protocol address): Network address software uses to identify a device across networks.
 - Ethernet: Wired networking technology used by switches/routers to connect devices in a LAN.
