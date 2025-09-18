@@ -11,7 +11,8 @@
 - **Backbone (Core)**: The fast, central part of a network that carries most traffic between areas. Think “highway.”
 - **Segment**: A smaller part of a network. Can be made by IP subnets or VLANs.
 - **Subnet**: An IP range (like 10.0.10.0/24) that groups hosts together.
-- **VLAN**: A logical grouping host; hosts “act” like they’re on the same switch (even if they are not)
+- **VLAN**: A logical L2 (Ethernet) grouping; hosts act like they’re on the same switch (even if they are not).
+- **Default Gateway**: The router IP that devices send traffic to for other subnets.
 
 ## Hierarchical Design: Building Around the Backbone
 
@@ -40,7 +41,7 @@ Networks are built in layers, starting from where users connect and building up 
 **Why Do We Need a Backbone?**
 
 - **Scalability**: Without a backbone, connecting 10 network segments would require 45 individual links (each segment connected to every other). With a backbone, you only need 10 links (each segment connects once to the backbone).
-- **Performance**: Dedicated high-capacity links (10G+) handle inter-segment traffic efficiently, rather than overloading distribution switches with transit traffic.
+- **Performance**: Dedicated high-capacity links (10G+) handle inter-segment traffic efficiently, rather than overloading distribution routers with transit traffic.
 - **Cost Efficiency**: Fewer total links and centralized high-speed equipment is more economical than multiple point-to-point connections.
 - **Traffic Engineering**: All inter-segment traffic flows through known paths, making it easier to monitor, control, and optimize network performance.
 

@@ -20,7 +20,7 @@
 - The device’s network port with a unique MAC identity that sends and receives traffic.
 - Serves one device, whereas switches/routers connect many devices or networks.
 - Available as wired Ethernet or Wi‑Fi; many devices (e.g., laptops) have both.
-- To keep its IP from changing, pin the IP in your router settings or use a static IP.
+- To keep its IP from changing, reserve the IP in your router's DHCP settings (DHCP reservation) or use a static IP.
 
 ## Network Cables/Channels
 
@@ -31,7 +31,7 @@ Physical cables and wireless channels carry data between devices with different 
 | Cat5e | 1 Gbps | $20-30 | 100m | Good | Standard for most LANs |
 | Cat6 | 1-10 Gbps | $30-50 | 100m (55m @ 10G) | Very Good | Future-proof for 10G |
 | Cat6a | 10 Gbps | $50-80 | 100m | Excellent | Shielded, less interference |
-| Fiber Multi-mode | 1-100 Gbps | $100-200 | 2km | Excellent | Campus/building backbone |
+| Fiber Multi-mode | 1-100 Gbps | $100-200 | 300-550m | Excellent | Campus/building backbone |
 | Fiber Single-mode | 1-100+ Gbps | $150-300 | 40km+ | Excellent | Long distance, ISP links |
 | Coax (RG6) | 1 Gbps | $15-25 | 100m | Good | Cable internet, legacy |
 | Wi-Fi 6 (5GHz) | 1-9 Gbps | $0/distance | 50m indoor | Fair | Wireless, interference prone |
@@ -94,7 +94,7 @@ This table shows how the switch automatically builds and maintains its forwardin
 
 ## Bridge
 
-- Like a small 2‑port switch: connects two network segments and forwards relavant traffic between them.
+- Like a small 2‑port switch: connects two network segments and forwards relevant traffic between them.
 - Helps reduce noise between areas and extend networks.
 
 ```mermaid
