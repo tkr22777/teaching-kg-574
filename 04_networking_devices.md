@@ -1,21 +1,31 @@
 ## Network Devices in Practice
 
 ### What we'll cover
-- NIC, Hub, Switch, Router, Bridge
+
+- Host, NIC, Hub, Switch, Router, Bridge
 - Wi‑Fi gear: Wi‑Fi router, WAP, RAP
 - Where each device sits in a simple home/office network and what it does
 
-## NIC (Network Interface Card)
- - Lets a device join a network and reach the Internet.
- - The device’s network port with a unique MAC identity that sends and receives traffic.
- - Serves one device, whereas switches/routers connect many devices or networks.
- - Available as wired Ethernet or Wi‑Fi; many devices (e.g., laptops) have both.
- - To keep its IP from changing, pin the IP in your router settings or use a static IP.
+## Host (Computer/Node)
 
+- Any device that connects to a network to send, receive, or process data.
+- Examples: desktop PCs, laptops, servers, smartphones, tablets, IoT devices.
+- Each host needs a unique IP address to communicate on the network.
+- Hosts are endpoints in network communication - they generate and consume network traffic.
+- Can act as clients (requesting services) or servers (providing services).
+
+## NIC (Network Interface Card)
+
+- Lets a device join a network and reach the Internet.
+- The device’s network port with a unique MAC identity that sends and receives traffic.
+- Serves one device, whereas switches/routers connect many devices or networks.
+- Available as wired Ethernet or Wi‑Fi; many devices (e.g., laptops) have both.
+- To keep its IP from changing, pin the IP in your router settings or use a static IP.
 
 ## Hub vs Switch
 
 ### Hub (old/repeater)
+
 - Sends every message to all ports, so everyone shares bandwidth and can collide.
 - Exists from early networks for simplicity; replaced by switches that send only where needed.
 - Avoid in modern setups; use only for quick tests or legacy gear.
@@ -32,6 +42,7 @@ graph TD
 In the above diagram, the hub acts as a simple repeater, broadcasting every frame to ALL connected ports. When PC A sends data, PCs B, C, and D all receive it unnecessarily. This creates a single collision domain where all devices compete for shared bandwidth, leading to inefficient utilization and potential collisions.
 
 ### Switch (modern)
+
 - Connects devices on the same network and sends traffic only where it needs to go.
 - Learns which device is on which port by watching traffic.
 - Stops collisions and shares bandwidth more fairly than a hub.
@@ -40,6 +51,7 @@ In the above diagram, the hub acts as a simple repeater, broadcasting every fram
 - In homes, the Ethernet ports on a Wi‑Fi router are a built‑in switch.
 
 **Unmanaged vs Managed Switches:**
+
 - **Unmanaged**: Plug-and-play, no configuration needed. Good for homes and simple setups.
 - **Managed**: Can be configured via web interface or command line. Offers VLANs, QoS, port mirroring, and monitoring. Essential for business networks.
 
@@ -55,16 +67,17 @@ In the above diagram, the switch learns MAC addresses and intelligently forwards
 
 **Switch MAC Address Table Example:**
 
-| Port | MAC Address | Status | Age (seconds) |
-|------|-------------|---------|---------------|
-| 1 | AA:BB:CC:01:02:03 | Learned | 45 |
-| 2 | AA:BB:CC:01:02:04 | Learned | 12 |
-| 3 | AA:BB:CC:01:02:05 | Learned | 8 |
-| 4 | - | Empty | - |
+| Port | MAC Address       | Status  | Age (seconds) |
+| ---- | ----------------- | ------- | ------------- |
+| 1    | AA:BB:CC:01:02:03 | Learned | 45            |
+| 2    | AA:BB:CC:01:02:04 | Learned | 12            |
+| 3    | AA:BB:CC:01:02:05 | Learned | 8             |
+| 4    | -                 | Empty   | -             |
 
 This table shows how the switch automatically builds and maintains its forwarding database. When a device sends a frame, the switch records the source MAC address and associates it with the incoming port. The "Age" column tracks how recently each MAC was seen - entries are removed after a timeout period (typically 5 minutes) to handle device moves or disconnections.
 
 ## Bridge
+
 - Like a small 2‑port switch: connects two network segments and forwards relavant traffic between them.
 - Helps reduce noise between areas and extend networks.
 
@@ -76,6 +89,7 @@ graph LR
 In the above diagram, the bridge selectively filters traffic between network segments, learning MAC addresses on each side. Local traffic within Segment A stays local and doesn't cross to Segment B, reducing congestion. Only inter-segment traffic gets forwarded, creating two separate collision domains while maintaining connectivity.
 
 ## Router
+
 - Connects different networks (home LAN to the Internet, or LAN to LAN).
 - Chooses where to send traffic between networks.
 - Lets many devices share one public address using NAT.
@@ -84,16 +98,19 @@ In the above diagram, the bridge selectively filters traffic between network seg
 
 ```mermaid
 graph LR
-  LAN[Home/Office Network] --- R[Router] --- Net[Internet]
+  LAN1[Engineering Subnet] --- R[Router]
+  LAN2[HR Subnet] --- R
+  R --- Net[Internet<br/>Public Networks]
 ```
 
-In the above diagram, the router connects different networks, serving as a gateway between the private LAN (192.168.x.x addresses) and the public Internet. It performs NAT to allow multiple devices to share one public IP address and acts as the default gateway for all external traffic.
+In the above diagram, the router connects multiple different networks - the Engineering Subnet and HR Subnet - to the Internet. Each network segment has its own subnet, and the router performs NAT to allow devices from both networks to share the router's public IP address. The router acts as the default gateway for both networks and can apply different policies (firewall rules, bandwidth limits) to each segment. Additionally, the router enables communication between the two subnets, routing traffic from Engineering to HR and vice versa when inter-departmental communication is needed.
 
 Common in homes: the “Wi‑Fi router” is a router + small switch + wireless access point in one box.
 
 ## Wi‑Fi: Router, WAP, RAP
 
 ### Wi‑Fi Router
+
 - Routes your home network to the Internet and creates the Wi‑Fi network.
 - Includes a small Ethernet switch for your wired devices.
 - Secures Wi‑Fi with passwords and can offer a guest network.
@@ -101,15 +118,18 @@ Common in homes: the “Wi‑Fi router” is a router + small switch + wireless 
 - Place centrally and elevated for better coverage; add a switch if you need more ports.
 
 ### WAP (Wireless Access Point)
+
 - Creates or extends Wi‑Fi coverage and bridges wireless devices onto your existing network.
 - Not a router; connects back to your router/switch over a wired link.
 
 ### RAP (Remote Access Point)
+
 - A WAP for remote sites that connects back over the Internet to your main network.
 - Useful for branch offices or home workers; traffic is tunneled back securely.
 - Typically managed by a controller or cloud from the main site.
 
 ### Complete Network Overview
+
 Here's how these devices work together in a typical small office network:
 
 ```mermaid
@@ -142,18 +162,19 @@ In the above diagram, this network shows how devices work together in a business
 
 **When to use each device:**
 
-| Scenario | Best Device | Why? |
-|----------|-------------|------|
-| Connect single device to network | NIC | Every device needs one |
-| Connect 5-8 devices in home | Unmanaged Switch | Simple, cheap, reliable |
-| Connect 20+ devices in office | Managed Switch | VLANs, monitoring, control |
-| Connect home network to Internet | Wi-Fi Router | All-in-one solution |
-| Add Wi-Fi to existing network | WAP | Dedicated wireless performance |
-| Connect remote office | RAP + VPN | Secure tunnel back to main site |
-| Connect two building segments | Bridge | Reduces traffic between segments |
-| Connect different networks | Router | Routes between network boundaries |
+| Scenario                         | Best Device      | Why?                              |
+| -------------------------------- | ---------------- | --------------------------------- |
+| Connect single device to network | NIC              | Every device needs one            |
+| Connect 5-8 devices in home      | Unmanaged Switch | Simple, cheap, reliable           |
+| Connect 20+ devices in office    | Managed Switch   | VLANs, monitoring, control        |
+| Connect home network to Internet | Wi-Fi Router     | All-in-one solution               |
+| Add Wi-Fi to existing network    | WAP              | Dedicated wireless performance    |
+| Connect remote office            | RAP + VPN        | Secure tunnel back to main site   |
+| Connect two building segments    | Bridge           | Reduces traffic between segments  |
+| Connect different networks       | Router           | Routes between network boundaries |
 
 ## Glossary / Quick Reference
+
 - MAC address (Media Access Control address): Unique hardware address of a network interface on a local network.
 - IP address (Internet Protocol address): Network address software uses to identify a device across networks.
 - Ethernet: Wired networking technology used by switches/routers to connect devices in a LAN.
