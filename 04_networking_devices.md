@@ -22,6 +22,22 @@
 - Available as wired Ethernet or Wi‑Fi; many devices (e.g., laptops) have both.
 - To keep its IP from changing, pin the IP in your router settings or use a static IP.
 
+## Network Cables/Channels
+
+Physical cables and wireless channels carry data between devices with different bandwidth, cost, and reliability trade-offs.
+
+| Type | Bandwidth | Cost per 100m | Distance Limit | Reliability | Notes |
+|------|-----------|---------------|----------------|-------------|--------|
+| Cat5e | 1 Gbps | $20-30 | 100m | Good | Standard for most LANs |
+| Cat6 | 1-10 Gbps | $30-50 | 100m (55m @ 10G) | Very Good | Future-proof for 10G |
+| Cat6a | 10 Gbps | $50-80 | 100m | Excellent | Shielded, less interference |
+| Fiber Multi-mode | 1-100 Gbps | $100-200 | 2km | Excellent | Campus/building backbone |
+| Fiber Single-mode | 1-100+ Gbps | $150-300 | 40km+ | Excellent | Long distance, ISP links |
+| Coax (RG6) | 1 Gbps | $15-25 | 100m | Good | Cable internet, legacy |
+| Wi-Fi 6 (5GHz) | 1-9 Gbps | $0/distance | 50m indoor | Fair | Wireless, interference prone |
+
+**Copper** cables are cost-effective but limited by interference. **Fiber** offers highest performance but costs more. **Wireless** provides mobility with variable performance.
+
 ## Hub vs Switch
 
 ### Hub (old/repeater)

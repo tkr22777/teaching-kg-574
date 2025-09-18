@@ -11,7 +11,7 @@
 - **Backbone (Core)**: The fast, central part of a network that carries most traffic between areas. Think “highway.”
 - **Segment**: A smaller part of a network. Can be made by IP subnets or VLANs.
 - **Subnet**: An IP range (like 10.0.10.0/24) that groups hosts together.
-- **VLAN**: A logical L2 (Ethernet) grouping; hosts “act” like they’re on the same switch (even if they are not)
+- **VLAN**: A logical grouping host; hosts “act” like they’re on the same switch (even if they are not)
 
 ## Hierarchical Design: Building Around the Backbone
 
