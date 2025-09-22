@@ -166,6 +166,22 @@ This diagram shows the OSI 7-layer model with each layer's primary responsibilit
 **What it does**: Transmits raw bits over physical media
 **Real examples**: Cables, fiber optics, radio signals
 
+### Typical Devices by Layer
+
+Understanding which devices operate at each layer helps with network design and troubleshooting:
+
+| OSI Layer | Typical Devices | Primary Function |
+|-----------|-----------------|------------------|
+| **Layer 7: Application** | Web proxies, Layer 7 load balancers, web application firewalls | Application-aware processing |
+| **Layer 6: Presentation** | SSL/TLS offloaders, content gateways | Data formatting and encryption |
+| **Layer 5: Session** | Session gateways, connection brokers | Dialog management |
+| **Layer 4: Transport** | Layer 4 load balancers | Port-based traffic management |
+| **Layer 3: Network** | Routers, Layer 3 switches | Inter-network routing |
+| **Layer 2: Data Link** | Switches, bridges, NICs, wireless access points | Local network switching |
+| **Layer 1: Physical** | Cables, hubs, repeaters | Physical signal transmission |
+
+**Note**: Many modern devices operate across multiple layers (e.g., firewalls, next-generation firewalls, wireless controllers).
+
 ### Memory Aids
 
 **Top to Bottom**: "All People Seem To Need Data Processing"
