@@ -170,23 +170,17 @@ This diagram shows the OSI 7-layer model with each layer's primary responsibilit
 
 Understanding which devices operate at each layer helps with network design and troubleshooting:
 
-| OSI Layer | Typical Devices | Primary Function |
-|-----------|-----------------|------------------|
-| **Layer 7: Application** | Web proxies, Layer 7 load balancers, web application firewalls | Application-aware processing |
-| **Layer 6: Presentation** | SSL/TLS offloaders, content gateways | Data formatting and encryption |
-| **Layer 5: Session** | Session gateways, connection brokers | Dialog management |
-| **Layer 4: Transport** | Layer 4 load balancers | Port-based traffic management |
-| **Layer 3: Network** | Routers, Layer 3 switches | Inter-network routing |
-| **Layer 2: Data Link** | Switches, bridges, NICs, wireless access points | Local network switching |
-| **Layer 1: Physical** | Cables, hubs, repeaters | Physical signal transmission |
+| OSI Layer                       | Typical Devices                                                | Primary Function               |
+| ------------------------------- | -------------------------------------------------------------- | ------------------------------ |
+| **Layer 7: Application**  | Web proxies, Layer 7 load balancers, web application firewalls | Application-aware processing   |
+| **Layer 6: Presentation** | SSL/TLS offloaders, content gateways                           | Data formatting and encryption |
+| **Layer 5: Session**      | Session gateways, connection brokers                           | Dialog management              |
+| **Layer 4: Transport**    | Layer 4 load balancers                                         | Port-based traffic management  |
+| **Layer 3: Network**      | Routers, Layer 3 switches                                      | Inter-network routing          |
+| **Layer 2: Data Link**    | Switches, bridges, NICs, wireless access points                | Local network switching        |
+| **Layer 1: Physical**     | Cables, hubs, repeaters                                        | Physical signal transmission   |
 
 **Note**: Many modern devices operate across multiple layers (e.g., firewalls, next-generation firewalls, wireless controllers).
-
-### Memory Aids
-
-**Top to Bottom**: "All People Seem To Need Data Processing"
-**Bottom to Top**: "Please Do Not Throw Sausage Pizza Away"
-
 
 ## Real-World Applications
 
@@ -199,7 +193,6 @@ When networks fail, the OSI model provides a systematic troubleshooting approach
 3. **Network**: Can you reach remote networks?
 4. **Transport**: Are the right services running?
 5. **Session/Presentation/Application**: Is the application configured correctly?
-
 
 ## Summary
 
