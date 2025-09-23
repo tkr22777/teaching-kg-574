@@ -38,17 +38,17 @@ Each level adds its own "wrapper" with information needed for that level to do i
 
 ### PDU Names at Each Layer
 
-Each layer has a specific name for its data structure:
+Each layer has a specific name for its data structure and adds specific header information:
 
-| OSI Layer        | PDU Name                                | What Gets Added                     | Purpose                        |
-| ---------------- | --------------------------------------- | ----------------------------------- | ------------------------------ |
-| 7 - Application  | **Data**                          | Application content                 | User applications and services |
-| 6 - Presentation | **Data**                          | Formatting/encryption               | Data translation and security  |
-| 5 - Session      | **Data**                          | Session management                  | Dialog control                 |
-| 4 - Transport    | **Segment** or **Datagram** | Port addressing, reliability        | End-to-end delivery            |
-| 3 - Network      | **Packet**                        | Logical addresses, routing          | Inter-network communication    |
-| 2 - Data Link    | **Frame**                         | Physical addresses, error detection | Local network delivery         |
-| 1 - Physical     | **Bits**                          | Electrical/optical signals          | Physical transmission          |
+| OSI Layer        | PDU Name | What Gets Added | Purpose |
+| ---------------- | -------- | --------------- | ------- |
+| 7 - Application  | **Data** | Application content, user authentication | User applications and services |
+| 6 - Presentation | **Data** | Data formatting, encryption information | Data translation and security |
+| 5 - Session      | **Data** | Session management, dialog control | Dialog control |
+| 4 - Transport    | **Segment** | Port numbers, delivery options | End-to-end delivery |
+| 3 - Network      | **Packet** | Logical addresses, routing information | Inter-network communication |
+| 2 - Data Link    | **Frame** | Physical addresses, error detection | Local network delivery |
+| 1 - Physical     | **Bits** | Signal transmission characteristics | Physical transmission |
 
 ```mermaid
 graph TD
@@ -75,123 +75,87 @@ graph LR
   D[Data] --> S[Segment] --> P[Packet] --> F[Frame] --> B[Bits]
 ```
 
-## Simple Example: Web Browsing Walkthrough
+## Concrete Example: Sending "Hello World"
 
-Let's trace what happens when you visit a website. We'll follow the encapsulation process step by step.
+Let's trace a simple "Hello World" message through encapsulation to see exactly what gets added at each layer:
 
-### Layer 7: Application Layer
+### Starting Data
+**Application wants to send**: `"Hello World"`
 
-**What happens**: Browser creates a web request
-**PDU**: Application **Data**
+### Layer-by-Layer Encapsulation
 
-### Layer 6-5: Presentation & Session Layers
-
-**What happens**: Data formatting and session management applied
-**PDU**: Still called **Data** (with formatting)
-
-### Layer 4: Transport Layer
-
-**What happens**: Transport header adds port identification and reliability
-**PDU**: **Segment**
-
-### Layer 3: Network Layer
-
-**What happens**: Network header adds logical addressing for routing
-**PDU**: **Packet**
-
-### Layer 2: Data Link Layer
-
-**What happens**: Data link header adds physical addressing for local delivery
-**PDU**: **Frame**
-**Key insight**: This layer only handles local network delivery
-
-### Layer 1: Physical Layer
-
-**What happens**: Frame becomes electrical signals
-**PDU**: **Bits**
-
-## De-encapsulation at the Destination
-
-When the frame reaches the web server, the process reverses:
-
-```mermaid
-graph TD
-    subgraph "De-encapsulation Process"
-        Bits[Layer 1: Physical<br/>Receives electrical signals]
-        Frame[Layer 2: Data Link<br/>Processes frame<br/>Removes data link header]
-        Packet[Layer 3: Network<br/>Processes packet<br/>Removes network header]
-        Segment[Layer 4: Transport<br/>Processes segment<br/>Removes transport header]
-        Session[Layer 5: Session<br/>Processes session<br/>Removes session header]
-        Present[Layer 6: Presentation<br/>Processes data<br/>Removes presentation header]
-        Data[Layer 7: Application<br/>Processes application request<br/>Generates response]
-    end
-  
-    Bits --> Frame
-    Frame --> Packet
-    Packet --> Segment
-    Segment --> Session
-    Session --> Present
-    Present --> Data
+**Layer 7 (Application)**:
+```
+Data: "Hello World"
 ```
 
-This diagram shows how the receiving server reverses the encapsulation process. At each layer, the corresponding header is examined and removed, revealing the data for the next layer up. The Physical layer receives electrical signals, Data Link processes the frame and removes its header to reveal the packet, and each successive layer removes its own header until the Application layer receives the original application request.
+**Layer 4 (Transport)**:
+```
+Transport Header: [Source Port: 8080 | Dest Port: 80 | Sequence: 1001]
+Payload: "Hello World"
+Result: [Transport Header][Hello World] = Segment
+```
 
-### What Each Layer Examines
+**Layer 3 (Network)**:
+```
+Network Header: [Source IP: 192.168.1.10 | Dest IP: 203.0.113.5 | Protocol: TCP]
+Payload: [Transport Header][Hello World]
+Result: [Network Header][Transport Header][Hello World] = Packet
+```
 
-1. **Physical**: Signal quality and timing
-2. **Data Link**: "Is this frame for me?" (physical address check)
-3. **Network**: "Is this packet for me?" (logical address check)
-4. **Transport**: "Which application gets this?" (port addressing)
-5. **Session**: Session management and dialog control
-6. **Presentation**: Data formatting and encryption handling
-7. **Application**: Process the actual application request
+**Layer 2 (Data Link)**:
+```
+Data Link Header: [Source MAC: AA:BB:CC:DD:EE:FF | Dest MAC: 11:22:33:44:55:66]
+Payload: [Network Header][Transport Header][Hello World]
+Result: [Data Link Header][Network Header][Transport Header][Hello World] = Frame
+```
 
-## What's in Headers?
+**Layer 1 (Physical)**:
+```
+Frame converted to electrical signals: 010101110011... = Bits
+```
 
-Headers contain control information that each layer needs to do its job:
+### Data Growth Through Layers
 
-- **Application Layer**: Application-specific information
-- **Presentation Layer**: Data format and encryption information
-- **Session Layer**: Dialog management information
-- **Transport Layer**: Port numbers and delivery options
-- **Network Layer**: Logical addresses and routing information
-- **Data Link Layer**: Physical addresses and error detection
-- **Physical Layer**: Signal transmission characteristics
+| Layer | Content Size | What's Included |
+|-------|-------------|-----------------|
+| **Application** | 11 bytes | `"Hello World"` |
+| **Transport** | ~31 bytes | Transport header (20 bytes) + data (11 bytes) |
+| **Network** | ~51 bytes | Network header (20 bytes) + Transport segment (31 bytes) |
+| **Data Link** | ~65 bytes | Data Link header (14 bytes) + Network packet (51 bytes) |
+| **Physical** | ~520 bits | Frame converted to electrical signals |
+
+### De-encapsulation Process
+
+When the frame reaches its destination:
+
+**Layer 1 (Physical)**: Converts electrical signals back to frame
+**Layer 2 (Data Link)**: 
+- Checks: "Is dest MAC 11:22:33:44:55:66 me?" ✓
+- Removes: [Data Link Header]
+- Passes up: [Network Header][Transport Header][Hello World]
+
+**Layer 3 (Network)**:
+- Checks: "Is dest IP 203.0.113.5 me?" ✓  
+- Removes: [Network Header]
+- Passes up: [Transport Header][Hello World]
+
+**Layer 4 (Transport)**:
+- Checks: "Is dest port 80 my service?" ✓
+- Removes: [Transport Header]  
+- Passes up: "Hello World"
+
+**Layer 7 (Application)**:
+- Receives: `"Hello World"`
+- Processes the original message!
 
 ## Real-World Applications
 
-### Network Performance
+**Troubleshooting**: When networks fail, check each layer systematically (Physical → Data Link → Network → Transport → Application)
 
-Understanding encapsulation helps with:
+**Security**: Each layer provides security opportunities (encryption at Presentation, firewalls at Network, etc.)
 
-- **Efficiency**: Each layer adds overhead, affecting speed
-- **Optimization**: Knowing where delays occur
-- **Capacity planning**: Understanding data growth through layers
-
-### Security Applications
-
-Each layer provides security opportunities:
-
-- **Application**: User authentication and input validation
-- **Presentation**: Data encryption and formatting security
-- **Transport**: Connection security and port management
-- **Network**: Address filtering and routing security
-- **Data Link**: Local network access control
-- **Physical**: Physical security of transmission media
-
-### Troubleshooting with Encapsulation Knowledge
-
-When networks fail, check each layer systematically:
-
-1. **Physical**: Are connections working?
-2. **Data Link**: Can devices communicate locally?
-3. **Network**: Can devices reach remote networks?
-4. **Transport**: Are services available?
-5. **Session**: Are sessions maintained?
-6. **Presentation**: Is data formatted correctly?
-7. **Application**: Is the application working correctly?
-
-This layered approach helps isolate problems quickly and efficiently.
+**Performance**: Each layer adds overhead - understanding encapsulation helps explain network efficiency and optimization opportunities
 
 ## Summary
 
