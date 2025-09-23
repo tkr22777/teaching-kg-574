@@ -51,7 +51,7 @@ Each layer has a specific name for its data structure and adds specific header i
 | 1 - Physical     | **Bits** | Signal transmission characteristics | Physical transmission |
 
 ```mermaid
-graph TD
+flowchart TD
     App[Application Layer<br/>Original Data]
     Pres[Presentation Layer<br/>Header + Data]
     Sess[Session Layer<br/>Header + Data]
