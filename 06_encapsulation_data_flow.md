@@ -129,25 +129,39 @@ Frame converted to electrical signals: 010101110011... = Bits
 
 When the frame reaches its destination:
 
-**Layer 1 (Physical)**: Converts electrical signals back to frame
-**Layer 2 (Data Link)**: 
-- Checks: "Is dest MAC 11:22:33:44:55:66 me?" ✓
-- Removes: [Data Link Header]
-- Passes up: [Network Header][Transport Header][Hello World]
+**Layer 1 (Physical)**:
+```
+Receives: 010101110011... (electrical signals)
+Converts: Electrical signals back to frame
+Passes up: [Data Link Header][Network Header][Transport Header][Hello World]
+```
+
+**Layer 2 (Data Link)**:
+```
+Checks: "Is dest MAC 11:22:33:44:55:66 me?" ✓
+Removes: [Data Link Header]
+Passes up: [Network Header][Transport Header][Hello World]
+```
 
 **Layer 3 (Network)**:
-- Checks: "Is dest IP 203.0.113.5 me?" ✓  
-- Removes: [Network Header]
-- Passes up: [Transport Header][Hello World]
+```
+Checks: "Is dest IP 203.0.113.5 me?" ✓
+Removes: [Network Header]
+Passes up: [Transport Header][Hello World]
+```
 
 **Layer 4 (Transport)**:
-- Checks: "Is dest port 80 my service?" ✓
-- Removes: [Transport Header]  
-- Passes up: "Hello World"
+```
+Checks: "Is dest port 80 my service?" ✓
+Removes: [Transport Header]
+Passes up: "Hello World"
+```
 
 **Layer 7 (Application)**:
-- Receives: `"Hello World"`
-- Processes the original message!
+```
+Receives: "Hello World"
+Processes: Original message successfully delivered!
+```
 
 ## Real-World Applications
 
