@@ -44,6 +44,8 @@
 - **IP Terminology**
 - **The Hierarchical IP Addressing Scheme**
 - **IPv4 Address Types**
+- **Introduction to Routing Tables** ← NEW
+- **DNS: Name-to-IP Translation** ← NEW
 - **Internet Protocol Version 6 (IPv6)**
 
 ## Week 7: Advanced IP Concepts
@@ -66,6 +68,7 @@
 ## Week 9: Routing Technologies
 - **Routing Protocols**
 - **Routing Protocol Basics**
+- **Routing Tables in Detail** ← NEW (builds on Week 6 introduction)
 - **Distance Vector Routing Protocols**
 - **Link State Routing Protocols**
 - **High Availability**
