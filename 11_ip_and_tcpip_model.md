@@ -22,6 +22,7 @@ In Week 4, we learned that Ethernet uses **MAC addresses** for communication at 
 Imagine you're in New York trying to access a web server in Tokyo. Your data must traverse dozens of different networks: your home network, your ISP's network, multiple backbone networks, the destination ISP's network, and finally the server's network.
 
 **MAC addresses cannot solve this problem because:**
+
 - MAC addresses are **flat** (no hierarchy) and provide no information about network location
 - MAC addresses only work within a single broadcast domain (local network)
 - Routers separate networks and do not forward frames based on MAC addresses alone
@@ -36,20 +37,20 @@ graph TD
         PC1 <--> Switch
         Switch <--> PC2
     end
-    
+  
     subgraph "Internet - Layer 2 Fails"
         Home[Home Network<br/>New York]
         ISP1[ISP Network]
         Backbone[Internet Backbone]
         ISP2[ISP Network]
         Server[Web Server<br/>Tokyo]
-        
+    
         Home -.-> ISP1
         ISP1 -.-> Backbone
         Backbone -.-> ISP2
         ISP2 -.-> Server
     end
-    
+  
     style PC1 fill:#e1f5fe
     style PC2 fill:#e1f5fe
     style Home fill:#ffcdd2
@@ -77,11 +78,11 @@ graph LR
     R1[Router A]
     R2[Router B]
     Server[Server<br/>203.0.113.5]
-    
+  
     PC -->|Ethernet Frame 1<br/>New MACs| R1
     R1 -->|Ethernet Frame 2<br/>New MACs| R2
     R2 -->|Ethernet Frame 3<br/>New MACs| Server
-    
+  
     style PC fill:#e1f5fe
     style Server fill:#e1f5fe
     style R1 fill:#fff9c4
@@ -94,15 +95,15 @@ This is why we say "**IP packets ride inside Ethernet frames**"—Ethernet provi
 
 ### Layer 2 vs Layer 3 Comparison
 
-| Characteristic | Layer 2 (Ethernet/MAC) | Layer 3 (IP) |
-|----------------|------------------------|--------------|
-| **Addressing Type** | Physical (MAC addresses) | Logical (IP addresses) |
-| **Address Format** | 48-bit hardware address (AA:BB:CC:DD:EE:FF) | 32-bit (IPv4) or 128-bit (IPv6) software address |
-| **Scope** | Local network only (single broadcast domain) | Global internetwork (across multiple networks) |
-| **Address Structure** | Flat (no hierarchy) | Hierarchical (network + host portions) |
-| **Routing** | Switching within a network | Routing between networks |
-| **Devices** | Switches, bridges | Routers, Layer 3 switches |
-| **Typical Use** | Local delivery within LAN | End-to-end delivery across Internet |
+| Characteristic              | Layer 2 (Ethernet/MAC)                       | Layer 3 (IP)                                     |
+| --------------------------- | -------------------------------------------- | ------------------------------------------------ |
+| **Addressing Type**   | Physical (MAC addresses)                     | Logical (IP addresses)                           |
+| **Address Format**    | 48-bit hardware address (AA:BB:CC:DD:EE:FF)  | 32-bit (IPv4) or 128-bit (IPv6) software address |
+| **Scope**             | Local network only (single broadcast domain) | Global internetwork (across multiple networks)   |
+| **Address Structure** | Flat (no hierarchy)                          | Hierarchical (network + host portions)           |
+| **Routing**           | Switching within a network                   | Routing between networks                         |
+| **Devices**           | Switches, bridges                            | Routers, Layer 3 switches                        |
+| **Typical Use**       | Local delivery within LAN                    | End-to-end delivery across Internet              |
 
 This table highlights the fundamental differences between Layer 2 and Layer 3, showing why both layers are necessary and how they serve complementary roles in network communication.
 
@@ -111,9 +112,7 @@ This table highlights the fundamental differences between Layer 2 and Layer 3, s
 IP has three fundamental characteristics that might seem like limitations but are actually features that enable the Internet's massive scale:
 
 1. **Connectionless**: IP sends packets without establishing a connection first. Each packet is independent and contains complete addressing information.
-
 2. **Best-effort Delivery**: IP attempts to deliver packets but makes no guarantees. Packets might be lost, duplicated, delayed, or arrive out of order.
-
 3. **Unreliable**: IP provides no acknowledgments, retransmissions, or delivery confirmations.
 
 **Why are these "limitations" actually features?**
@@ -149,14 +148,14 @@ graph LR
         O2[2. Data Link]
         O1[1. Physical]
     end
-    
+  
     subgraph "TCP/IP Model (4 Layers)"
         T4[Application]
         T3[Transport]
         T2[Internet]
         T1[Network Access]
     end
-    
+  
     O7 -.-> T4
     O6 -.-> T4
     O5 -.-> T4
@@ -164,7 +163,7 @@ graph LR
     O3 -.-> T2
     O2 -.-> T1
     O1 -.-> T1
-    
+  
     style T4 fill:#c8e6c9
     style T3 fill:#fff9c4
     style T2 fill:#ffccbc
@@ -189,13 +188,14 @@ The **Transport Layer** (Layer 4) sits between applications and the Internet Lay
 Transmission Control Protocol provides **reliable, connection-oriented** communication.
 
 **How TCP achieves reliability:**
+
 - Establishes connection first (three-way handshake) before sending data
 - Every data segment must be acknowledged by the receiver
 - If acknowledgment doesn't arrive, sender retransmits the data
 - Sequence numbers ensure data arrives in correct order
 - This waiting, tracking, and retransmitting takes time and processing
 
-**Use when:** Web browsing (HTTP/HTTPS), email (SMTP, IMAP), file transfer (FTP, SFTP), remote access (SSH)  
+**Use when:** Web browsing (HTTP/HTTPS), email (SMTP, IMAP), file transfer (FTP, SFTP), remote access (SSH)
 **Trade-off:** Reliability comes at the cost of higher overhead and latency
 
 **UDP: Fast Communication**
@@ -203,27 +203,28 @@ Transmission Control Protocol provides **reliable, connection-oriented** communi
 User Datagram Protocol provides **fast, connectionless** communication.
 
 **How UDP achieves speed:**
+
 - No connection setup - just sends data immediately
 - No acknowledgments - doesn't wait to confirm delivery
 - No retransmissions - lost packets are simply lost
 - Minimal header (8 bytes vs TCP's 20+ bytes)
 - This "fire and forget" approach is much faster
 
-**Use when:** DNS lookups, live streaming, VoIP, online gaming  
+**Use when:** DNS lookups, live streaming, VoIP, online gaming
 **Trade-off:** Speed comes at the cost of no reliability guarantees
 
 ### TCP vs UDP Comparison
 
-| Characteristic | TCP (Transmission Control Protocol) | UDP (User Datagram Protocol) |
-|----------------|-------------------------------------|------------------------------|
-| **Connection** | Connection-oriented (requires handshake) | Connectionless (no setup) |
-| **Reliability** | Reliable (guarantees delivery) | Unreliable (best-effort) |
-| **Ordering** | Ordered delivery | No ordering guarantee |
-| **Speed** | Slower (due to overhead) | Faster (minimal overhead) |
-| **Header Size** | 20+ bytes | 8 bytes |
-| **Use Cases** | Web, email, file transfer, remote access | DNS, streaming, VoIP, gaming |
-| **Error Recovery** | Automatic retransmission | None (application handles if needed) |
-| **Flow Control** | Yes | No |
+| Characteristic           | TCP (Transmission Control Protocol)      | UDP (User Datagram Protocol)         |
+| ------------------------ | ---------------------------------------- | ------------------------------------ |
+| **Connection**     | Connection-oriented (requires handshake) | Connectionless (no setup)            |
+| **Reliability**    | Reliable (guarantees delivery)           | Unreliable (best-effort)             |
+| **Ordering**       | Ordered delivery                         | No ordering guarantee                |
+| **Speed**          | Slower (due to overhead)                 | Faster (minimal overhead)            |
+| **Header Size**    | 20+ bytes                                | 8 bytes                              |
+| **Use Cases**      | Web, email, file transfer, remote access | DNS, streaming, VoIP, gaming         |
+| **Error Recovery** | Automatic retransmission                 | None (application handles if needed) |
+| **Flow Control**   | Yes                                      | No                                   |
 
 This table contrasts TCP and UDP characteristics, highlighting their different design philosophies: TCP prioritizes reliability while UDP prioritizes speed and simplicity.
 
@@ -241,21 +242,21 @@ Both TCP and UDP use **port numbers** to enable multiple services to share a sin
 
 **Port Number Ranges:**
 
-| Range | Type | Usage |
-|-------|------|-------|
-| **0-1023** | Well-known ports | Reserved for common services (requires administrator privileges) |
-| **1024-49151** | Registered ports | Assigned to specific services by IANA |
-| **49152-65535** | Dynamic/Private ports | Temporary ports for client connections |
+| Range                 | Type                  | Usage                                                            |
+| --------------------- | --------------------- | ---------------------------------------------------------------- |
+| **0-1023**      | Well-known ports      | Reserved for common services (requires administrator privileges) |
+| **1024-49151**  | Registered ports      | Assigned to specific services by IANA                            |
+| **49152-65535** | Dynamic/Private ports | Temporary ports for client connections                           |
 
 **Common Well-Known Ports:**
 
-| Port | Protocol | Service | Description |
-|------|----------|---------|-------------|
-| **22** | TCP | SSH | Secure Shell (remote access) |
-| **25** | TCP | SMTP | Email sending |
-| **53** | TCP/UDP | DNS | Domain Name System |
-| **80** | TCP | HTTP | Web traffic (unencrypted) |
-| **443** | TCP | HTTPS | Secure web traffic (encrypted) |
+| Port          | Protocol | Service | Description                    |
+| ------------- | -------- | ------- | ------------------------------ |
+| **22**  | TCP      | SSH     | Secure Shell (remote access)   |
+| **25**  | TCP      | SMTP    | Email sending                  |
+| **53**  | TCP/UDP  | DNS     | Domain Name System             |
+| **80**  | TCP      | HTTP    | Web traffic (unencrypted)      |
+| **443** | TCP      | HTTPS   | Secure web traffic (encrypted) |
 
 **How Ports Enable Multiple Services:**
 
@@ -274,13 +275,3 @@ IP and the TCP/IP protocol suite provide the foundation for internetworking, sol
 - UDP provides speed for applications that tolerate loss
 - Port numbers enable multiple services to share a single IP address
 - IP packets ride inside Ethernet frames for local delivery at each network segment
-
-**Connection to Week 6:** Now that we understand what IP is and why it exists, the natural next question is: "What do IP addresses look like, and how do they work?" Week 6 will explore IP addressing in detail, including address formats, subnetting, and the differences between IPv4 and IPv6.
-
-## References
-
-- RFC 791: Internet Protocol (IPv4)
-- RFC 793: Transmission Control Protocol
-- RFC 768: User Datagram Protocol
-- [TCP/IP Illustrated, Volume 1](https://www.amazon.com/TCP-Illustrated-Vol-Addison-Wesley-Professional/dp/0201633469)
-
