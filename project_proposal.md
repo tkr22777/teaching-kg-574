@@ -1,4 +1,4 @@
-# Network Project Proposal Guide
+# KG-574 Course Project Proposal
 
 ## Requirements
 
