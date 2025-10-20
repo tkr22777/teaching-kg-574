@@ -88,9 +88,11 @@ The three-way handshake ensures both sides can send and receive data, agree on i
 Once connected, TCP ensures reliable delivery through:
 
 **Acknowledgments:** Every segment must be acknowledged. If no acknowledgment arrives within a timeout period, data is retransmitted.
+
 - Example: Client sends Seq=101 (100 bytes) → Server responds Ack=201 ("received up to byte 200")
 
 **Sequence Numbers:** Each byte is numbered sequentially to detect missing segments, reorder out-of-order segments, and detect duplicates.
+
 - Example: Segments arrive as Seq=100, Seq=300, Seq=200 → receiver buffers and reorders correctly
 
 ### Connection Termination
@@ -108,158 +110,41 @@ This ensures both sides agree to close and all data has been received.
 
 ## TCP/IP Encapsulation in Practice
 
-### Protocol Headers
+Building on Week 3, here is a concise refresher focused on TCP. Keep the big picture in mind: each lower layer wraps the data from the layer above.
 
-Building on Week 3's encapsulation concepts, we now examine the specific fields in IP, TCP, and UDP headers that enable internetworking.
-
-**IP Header (20 bytes minimum)** - Routes packets across networks:
-
-| Field                    | Size    | Purpose                     | Example Value                  |
-| ------------------------ | ------- | --------------------------- | ------------------------------ |
-| **Version**        | 4 bits  | IP version                  | 4 (IPv4) or 6 (IPv6)           |
-| **Header Length**  | 4 bits  | Header size in 32-bit words | 5 (= 20 bytes)                 |
-| **TTL**            | 8 bits  | Time to Live (hop limit)*   | 64 (decrements at each router) |
-| **Protocol**       | 8 bits  | Upper layer protocol        | 6 = TCP, 17 = UDP, 1 = ICMP    |
-| **Source IP**      | 32 bits | Sender's IP address         | 192.168.1.10                   |
-| **Destination IP** | 32 bits | Receiver's IP address       | 203.0.113.5                    |
-
-*TTL prevents infinite routing loops. Starts at 64 or 128, decrements at each router. When it reaches 0, the packet is discarded.
-
-**TCP Header (20+ bytes)** - Enables reliable, ordered communication:
-
-| Field                           | Size    | Purpose                      | Example Value                   |
-| ------------------------------- | ------- | ---------------------------- | ------------------------------- |
-| **Source Port**           | 16 bits | Sending application's port   | 51234 (ephemeral)               |
-| **Destination Port**      | 16 bits | Receiving application's port | 443 (HTTPS)                     |
-| **Sequence Number**       | 32 bits | Position in byte stream      | 1000 (bytes sent so far)        |
-| **Acknowledgment Number** | 32 bits | Next expected byte           | 5000 (expecting byte 5000 next) |
-| **Flags**                 | 9 bits  | Control bits                 | SYN, ACK, FIN, RST, PSH, URG    |
-| **Window Size**           | 16 bits | Receiver buffer space        | 65535 (can receive 64KB)        |
-| **Checksum**              | 16 bits | Error detection              | Calculated value                |
-
-Key TCP Flags: **SYN** (connection establishment), **ACK** (acknowledge data), **FIN** (graceful close), **RST** (abrupt close), **PSH** (deliver immediately), **URG** (priority data)
-
-**UDP Header (8 bytes fixed)** - Simple, fast communication:
-
-| Field                      | Size    | Purpose                            | Example Value     |
-| -------------------------- | ------- | ---------------------------------- | ----------------- |
-| **Source Port**      | 16 bits | Sending application's port         | 53214 (ephemeral) |
-| **Destination Port** | 16 bits | Receiving application's port       | 53 (DNS)          |
-| **Length**           | 16 bits | Total size (header + data)         | 64 bytes          |
-| **Checksum**         | 16 bits | Error detection (optional in IPv4) | Calculated value  |
-
-## Complete Encapsulation Example: Web Request
-
-Let's trace a complete web request from your browser to a web server, showing exactly what gets added at each layer.
-
-**Scenario:** Your web browser (192.168.1.10) requests a web page from www.example.com (203.0.113.5) over HTTPS.
-
-### Layer-by-Layer Encapsulation
-
-```
-Application Layer:
-    HTTP GET /index.html HTTP/1.1
-    Size: 200 bytes
-            ↓
-Transport Layer (TCP Segment):
-    TCP Header: 20 bytes (Src Port: 51234, Dst Port: 443, Seq: 1000, Ack: 5000, Flags: PSH/ACK)
-    Payload: 200 bytes (HTTP data)
-    Total: 220 bytes
-            ↓
-Internet Layer (IP Packet):
-    IP Header: 20 bytes (Src IP: 192.168.1.10, Dst IP: 203.0.113.5, TTL: 64, Protocol: 6=TCP)
-    Payload: 220 bytes (TCP segment)
-    Total: 240 bytes
-            ↓
-Network Access Layer (Ethernet Frame):
-    Ethernet Header: 14 bytes (Src MAC: 11:22:33:44:55:66, Dst MAC: AA:BB:CC:DD:EE:FF)
-    Payload: 240 bytes (IP packet)
-    Ethernet Trailer: 4 bytes (FCS checksum)
-    Total: 258 bytes
-            ↓
-Physical Layer:
-    258 bytes × 8 = 2,064 bits transmitted as electrical signals
-```
-
-**Note:** Ethernet MACs change at each router hop—the destination MAC is the next-hop device, not the final destination. IP addresses remain constant end-to-end.
-
-### Complete Encapsulation Diagram
+### Quick view
 
 ```mermaid
-graph TD
-    APP["Application Data<br/>HTTP GET Request<br/>200 bytes"]
-    TCP["TCP Segment<br/>TCP Header + Data<br/>20 + 200 = 220 bytes"]
-    IP["IP Packet<br/>IP Header + TCP Segment<br/>20 + 220 = 240 bytes"]
-    ETH["Ethernet Frame<br/>Ethernet Header + IP Packet + FCS<br/>14 + 240 + 4 = 258 bytes"]
-    BITS["Physical Transmission<br/>258 x 8 = 2,064 bits"]
-    
-    APP --> TCP
-    TCP --> IP
-    IP --> ETH
-    ETH --> BITS
-    
-    style APP fill:#c8e6c9
-    style TCP fill:#fff9c4
-    style IP fill:#ffccbc
-    style ETH fill:#e1f5fe
-    style BITS fill:#f5f5f5
+graph LR
+  APP[Application Data] --> TCP[TCP Segment]
+  TCP --> IP[IP Packet]
+  IP --> ETH[Ethernet Frame]
+  ETH --> BITS[Bits on the wire]
 ```
 
-This diagram shows the complete encapsulation process for a web request, with each layer adding its header and the data growing from 200 bytes of application data to 258 bytes as a complete Ethernet frame ready for physical transmission.
+### What each layer adds (TCP path)
 
-### Size Progression Table
+- Application: the message (e.g., HTTP request)
+- Transport (TCP): source/destination ports, sequence/ack numbers, flags (SYN/ACK/FIN), checksum
+- Internet (IP): source/destination IP addresses, TTL, Protocol=6 (TCP)
+- Data Link (Ethernet): source/destination MAC addresses, EtherType, FCS (error check)
 
-| Layer                 | PDU Name       | Header Size  | Payload Size | Total Size | Overhead |
-| --------------------- | -------------- | ------------ | ------------ | ---------- | -------- |
-| **Application** | Data           | 0            | 200 bytes    | 200 bytes  | 0%       |
-| **Transport**   | TCP Segment    | 20 bytes     | 200 bytes    | 220 bytes  | 10%      |
-| **Internet**    | IP Packet      | 20 bytes     | 220 bytes    | 240 bytes  | 20%      |
-| **Data Link**   | Ethernet Frame | 14 + 4 bytes | 240 bytes    | 258 bytes  | 29%      |
-| **Physical**    | Bits           | -            | 258 bytes    | 2,064 bits | -        |
+Notes:
 
-This table shows how data grows as it moves down the protocol stack, with each layer adding its own header. The original 200-byte HTTP request becomes 258 bytes on the wire, representing 29% protocol overhead.
+- MAC addresses change at each hop (next-hop delivery). IP addresses remain end-to-end.
+- Ports identify applications on a host; IPs identify hosts.
 
-**Key Insights:**
+### Mini walkthrough (HTTPS example)
 
-- Original data: 200 bytes
-- Total overhead: 58 bytes (29% of final frame size)
-- IP + TCP headers alone: 40 bytes (20% overhead)
-- For small messages, overhead percentage is significant
-- For large files, overhead percentage becomes negligible (40 bytes overhead on a 1500-byte packet = 2.7%)
+1. Browser creates HTTP request → TCP wraps it as a segment (ephemeral source port → 443), tracking bytes with sequence numbers.
+2. IP adds addressing (source/destination IPs). Ethernet delivers to the next hop on the local link.
+3. Receiver removes headers in reverse (Ethernet → IP → TCP) and passes the original HTTP data to the application.
 
-### De-encapsulation at Receiver
+### Why this matters for TCP
 
-When the frame arrives at the destination server (203.0.113.5), the process reverses (as covered in Week 3):
-
-1. **Physical → Data Link:** Converts bits to frame, checks FCS
-2. **Data Link → Network:** Checks destination MAC (77:88:99:AA:BB:CC), removes Ethernet header, examines EtherType (0x0800 = IPv4)
-3. **Network → Transport:** Checks destination IP (203.0.113.5), removes IP header, examines Protocol field (6 = TCP)
-4. **Transport → Application:** Checks destination port (443 = HTTPS), processes sequence/ACK numbers, removes TCP header
-5. **Application:** Receives HTTP GET request (200 bytes), processes and responds
-
-### Practical Application: Packet Capture Tools
-
-Network engineers use **packet capture tools** like **Wireshark** to see this encapsulation in action. These tools capture frames from the network and decode each layer's headers.
-
-**What Wireshark shows:**
-
-1. **Frame details**: Ethernet source/destination MACs, frame size
-2. **IP details**: Source/destination IPs, TTL, protocol field
-3. **TCP/UDP details**: Ports, sequence numbers, flags
-4. **Application details**: HTTP requests, DNS queries, etc.
-
-**Common troubleshooting scenarios:**
-
-- **TCP retransmissions**: Network congestion or packet loss
-- **Wrong destination port**: Application misconfiguration  
-- **Unexpected RST flags**: Firewall blocking or connection refused
-
-Understanding encapsulation enables you to:
-
-- **Troubleshoot** network problems at the correct layer
-- **Optimize** performance by understanding overhead
-- **Secure** networks by knowing what information is visible at each layer
-- **Design** efficient protocols and applications
+- Encapsulation adds small, fixed headers; typical IPv4+TCP+Ethernet overhead is roughly 40–58 bytes per packet.
+- TCP’s headers enable reliability and ordering; IP gets the packet across networks; Ethernet gets it across the local link.
+- For small messages, header overhead is noticeable; for large transfers, it becomes negligible per packet.
 
 ## Summary
 
