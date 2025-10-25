@@ -36,7 +36,7 @@ Three types of routes you'll see:
 2. **On-link routes**: Devices on your local network - send directly without a router
 3. **Specific routes**: Custom paths for certain networks (less common)
 
-Diagram: Router with LAN, DMZ, and WAN
+Diagram: Router with LAN (Local Area Network), DMZ (Demilitarized Zone), and WAN (Wide Area Network)
 
 ```mermaid
 graph TD
@@ -128,7 +128,7 @@ Live Demo — View your routing table
 - Find routes for your local network (they'll match your IP's network portion)
 - Linux tip: `ip route get 8.8.8.8` shows the exact route/interface chosen
 
-## IPv6 Primer
+## IPv6 (Internet Protocol version 6) Primer
 
 IPv6 addresses are 128 bits written in hexadecimal with colons. Leading zeros can be omitted; one consecutive sequence of zeros can be compressed with `::`.
 Compression rules (at a glance)
@@ -158,7 +158,7 @@ Practice
 - Compress: 2001:0db8:0000:0000:0000:0000:0000:0001 → 2001:db8::1
 - Expand: 2001:db8::8a2e → 2001:0db8:0000:0000:0000:0000:0000:8a2e
 
-## Practical Diagnostics with ICMP
+## Practical Diagnostics with ICMP (Internet Control Message Protocol)
 
 ICMP (Internet Control Message Protocol) is a helper protocol that provides diagnostic and error messages for IP networks. Two essential tools use ICMP: `ping` and `traceroute`.
 
