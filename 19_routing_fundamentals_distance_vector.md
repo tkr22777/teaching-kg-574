@@ -1,13 +1,8 @@
 # Routing Fundamentals & Global Routing
 
 ## Overview
-We build an intuitive picture of how routers move packets between networks. We’ll first outline routing protocol types at a high level, then see how the global Internet is organized into Autonomous Systems (AS). Finally, we’ll read a routing table and follow a packet step by step, finishing with how routers choose the “best” route.
+Back in Week 6, we learned how to *read* a routing table—seeing prefixes, next hops, and interfaces. Now we'll see how routes get *into* that table and how routers use them to move packets between networks. We'll outline routing protocol types at a high level, then see how the global Internet is organized into Autonomous Systems (AS). Finally, we'll trace a packet step by step and learn how routers choose the "best" route when multiple options exist.
 
-What you’ll learn (in plain language):
-- The kinds of routing protocols and where they are used
-- Why the Internet is a “network of networks” (AS) and where BGP fits
-- How to read a routing table and trace a packet across two routers
-- How routers break ties: longest prefix → AD → metric
 
 ## Key Terms
 - **Autonomous System (AS)**: A network under a single administrative control.
@@ -43,6 +38,7 @@ Routing protocols can also be classified by their algorithm:
 - **Distance Vector**: Share routing tables with neighbors, "routing by rumor"
   - Examples: RIP, EIGRP
   - Simple mental model; can be slower to react to failures
+  - *Note: EIGRP is sometimes called an "advanced distance vector" or "hybrid" because it adds Link-State features, but we classify it here as DV for its neighbor-based updates*
 - **Link-State**: Build a complete topology map, calculate best paths independently
   - Examples: OSPF, IS-IS
   - More setup, faster/more reliable convergence in practice
@@ -179,14 +175,4 @@ This flowchart shows the three-step decision process routers use to select the b
 
 Lower AD means “more trusted.” Directly connected (0) beats everything. Static (1) beats any dynamic protocol. AD only matters when prefix length is the same.
 
-## Key Takeaways
-- IGPs are used inside an AS; BGP connects different ASes on the Internet.
-- Routers forward based on their routing table using next-hop decisions.
-- Route choice order: longest prefix → lowest AD → lowest metric.
-- Simple topologies are great to practice reading routing tables and tracing packets.
 
-## Quick Review Questions
-- What is the difference between an IGP and an EGP?
-- Why does the global Internet use different routing protocols in different locations?
-- When two routes for the same destination exist, what is the first criterion a router uses to select the best one?
-- In the two-router example, what happens if the link between R1 and R2 fails?
